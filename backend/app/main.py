@@ -1,6 +1,9 @@
 from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
+from app.core.database import init_models
+from app.modules.auth.router import router as auth_router
+from app.modules.usuarios.router import router as usuarios_router
 
 # Creación de la instancia principal de FastAPI
 app = FastAPI(
@@ -26,6 +29,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Inicializar registro de modelos de base de datos
+init_models()
+
 # Router principal con prefijo global /api/v1 según consigna
 api_router = APIRouter(prefix="/api/v1")
 
@@ -33,6 +39,10 @@ api_router = APIRouter(prefix="/api/v1")
 def health_check():
     """Endpoint para verificar que el servicio está activo y respondiendo."""
     return {"status": "ok", "app": "Food Store API", "version": "1.0.0"}
+
+# Inclusión de routers modulares bajo /api/v1
+api_router.include_router(auth_router)
+api_router.include_router(usuarios_router)
 
 # Registro del router en la app
 app.include_router(api_router)

@@ -25,8 +25,13 @@ class BaseRepository(Generic[T]):
         return list(self.session.exec(statement).all())
 
     def add(self, entity: T) -> T:
-        """Agrega una entidad a la sesión actual de la base de datos."""
+        """
+        Agrega una entidad a la sesión actual de la base de datos y envía los cambios pendientes
+        (flush) para que la base de datos asigne la clave primaria (ID) autoincremental sin hacer commit.
+        """
         self.session.add(entity)
+        self.session.flush()
+        self.session.refresh(entity)
         return entity
 
     def delete(self, entity: T) -> None:

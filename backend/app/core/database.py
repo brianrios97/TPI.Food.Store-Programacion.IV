@@ -14,17 +14,31 @@ engine = create_engine(
     connect_args=connect_args
 )
 
+def init_models() -> None:
+    """
+    Importa todos los modelos de dominio para que el registro de SQLAlchemy
+    resuelva las referencias entre clases en las relaciones (Relationship).
+    """
+    import app.modules.usuarios.models  # noqa: F401
+    import app.modules.categorias.models  # noqa: F401
+    import app.modules.productos.models  # noqa: F401
+    import app.modules.pedidos.models  # noqa: F401
+
+
 def session_factory() -> Session:
     """
     Crea y retorna una nueva sesión de base de datos.
-    Es utilizada por el Unit of Work para gestionar transacciones atómicas.
+    expire_on_commit=False evita DetachedInstanceError al acceder a atributos
+    después de que el Unit of Work ejecuta commit() y cierra la sesión.
     """
-    return Session(engine)
+    return Session(engine, expire_on_commit=False)
+
 
 def create_all_tables() -> None:
     """
     Crea todas las tablas registradas en SQLModel.metadata en la base de datos.
     Es idempotente: si las tablas ya existen, no hace nada.
     """
+    init_models()
     SQLModel.metadata.create_all(engine)
 
