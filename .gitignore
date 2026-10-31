@@ -51,3 +51,9 @@ Thumbs.db
 htmlcov/
 .pytest_cache/
 
+# Microsoft Office temp files & Documents
+~$*
+*.docx
+Guion_*
+scripts/generar_word_guion.py
+
