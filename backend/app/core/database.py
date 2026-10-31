@@ -3,13 +3,13 @@ from app.core.config import settings
 
 # Argumentos de conexión especiales según el motor de base de datos
 connect_args = {}
-if settings.DATABASE_URL.startswith("sqlite"):
+if settings.resolved_database_url.startswith("sqlite"):
     # Necesario para SQLite en aplicaciones multihilo como FastAPI
     connect_args["check_same_thread"] = False
 
 # Creación del engine (motor de conexión)
 engine = create_engine(
-    settings.DATABASE_URL,
+    settings.resolved_database_url,
     echo=False,  # Cambiar a True si se desea ver cada consulta SQL en la consola
     connect_args=connect_args
 )

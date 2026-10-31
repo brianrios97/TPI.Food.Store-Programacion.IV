@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Search, ShoppingBag, Utensils, X, Check, Flame } from "lucide-react";
+import { Search, ShoppingBag, Utensils, X, ChevronLeft, ChevronRight, Check } from "lucide-react";
 import { productosApi } from "../api/productosApi";
 import { categoriasApi } from "../../categorias/api/categoriasApi";
 import { useCartStore } from "../../../store/cartStore";
 import { toast } from "../../../store/toastStore";
 import { CardSkeleton } from "../../../shared/components/Skeleton";
 import { EstadoVacio } from "../../../shared/components/EstadoVacio";
-import { Paginacion } from "../../../shared/components/Paginacion";
 
 const ITEMS_POR_PAGINA = 8;
 
@@ -76,226 +75,220 @@ export const CatalogoPage: React.FC = () => {
       imagen_url: producto.imagen_url || undefined,
       stock: producto.stock
     });
-    toast.success(`¡"${producto.nombre}" agregado al carrito!`);
+    toast.success(`¡${producto.nombre} agregado al carrito!`);
   };
 
   return (
-    <div className="space-y-8">
-      {/* Banner Hero */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-500 via-amber-600 to-orange-600 text-white p-8 sm:p-12 shadow-xl shadow-amber-500/15">
-        <div className="relative z-10 max-w-2xl space-y-3">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-bold uppercase tracking-wider">
-            <Flame className="w-3.5 h-3.5 text-amber-200" />
-            <span>Delivery Rápido y Sabroso</span>
-          </div>
-          <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
-            Los mejores sabores, directo a tu mesa.
-          </h1>
-          <p className="text-amber-100 text-sm sm:text-base leading-relaxed">
-            Platos preparados con los mejores ingredientes, hamburguesas caseras, pizzas al molde y pastas artesanales.
-          </p>
-        </div>
-        {/* Decoración geométrica de fondo */}
-        <div className="absolute -right-12 -bottom-12 w-64 h-64 rounded-full bg-white/10 blur-2xl pointer-events-none" />
-      </div>
-
-      {/* Barra de Filtros y Búsqueda */}
-      <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
-        {/* Buscador */}
-        <div className="relative flex-1 max-w-md">
-          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
-            <Search className="w-4 h-4" />
-          </div>
+    <div className="flex-1 min-h-0 flex gap-4 w-full overflow-hidden" style={{ height: "calc(100vh - 7.5rem)" }}>
+      {/* SIDEBAR: Buscador + Lista de Categorías */}
+      <aside className="w-52 shrink-0 bg-white rounded-xl p-3 border border-slate-200/90 shadow-sm flex flex-col overflow-hidden">
+        {/* Buscador de productos */}
+        <div className="relative mb-3">
           <input
             type="text"
             value={busqueda}
             onChange={handleBuscar}
-            placeholder="Buscar por nombre o descripción..."
-            className="w-full pl-10 pr-9 py-2.5 bg-white border border-stone-200 rounded-xl text-sm font-medium placeholder-stone-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100 transition-all shadow-sm"
+            placeholder="Buscar producto..."
+            className="w-full pl-8 pr-7 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium placeholder-slate-400 focus:outline-none focus:border-[#1e3a8a] focus:ring-1 focus:ring-[#1e3a8a]/30 transition-all"
           />
+          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5 pointer-events-none" />
           {busqueda && (
             <button
               onClick={handleLimpiarBusqueda}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-stone-400 hover:text-stone-600"
+              className="absolute right-2 top-2.5 text-slate-400 hover:text-slate-600 cursor-pointer"
               title="Borrar búsqueda"
             >
-              <X className="w-4 h-4" />
+              <X className="w-3.5 h-3.5" />
             </button>
           )}
         </div>
 
-        {/* Píldoras de Categorías */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-2 md:pb-0 scrollbar-none">
-          <button
-            onClick={() => handleCambiarCategoria(null)}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
-              categoriaSeleccionada === null
-                ? "bg-stone-900 text-white shadow-sm"
-                : "bg-white text-stone-600 border border-stone-200 hover:bg-stone-50"
-            }`}
-          >
-            Todas
-          </button>
-          {categorias.map((cat) => (
+        {/* Encabezado Categorías */}
+        <h3 className="text-[11px] uppercase tracking-widest font-bold text-slate-500 mb-2 px-1">
+          Categorías
+        </h3>
+
+        {/* Lista de Categorías */}
+        <ul className="flex-1 overflow-y-auto space-y-0.5 pr-0.5 text-xs">
+          <li>
             <button
-              key={cat.id}
-              onClick={() => handleCambiarCategoria(cat.id)}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
-                categoriaSeleccionada === cat.id
-                  ? "bg-amber-500 text-white shadow-sm shadow-amber-500/20"
-                  : "bg-white text-stone-600 border border-stone-200 hover:bg-stone-50"
+              onClick={() => handleCambiarCategoria(null)}
+              className={`w-full text-left px-3 py-2 rounded-lg font-medium transition-all cursor-pointer ${
+                categoriaSeleccionada === null
+                  ? "bg-[#1e3a8a] text-white font-semibold shadow-sm"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-[#1e3a8a]"
               }`}
             >
-              {cat.nombre}
+              Todas
             </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Grilla de Productos */}
-      {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {Array.from({ length: ITEMS_POR_PAGINA }).map((_, idx) => (
-            <CardSkeleton key={idx} />
-          ))}
-        </div>
-      ) : isError ? (
-        <EstadoVacio
-          titulo="Error al cargar productos"
-          descripcion="No pudimos comunicarnos con el servidor. Por favor, reintentalo."
-        />
-      ) : productos.length === 0 ? (
-        <EstadoVacio
-          titulo="No se encontraron productos"
-          descripcion="Probá seleccionando otra categoría o cambiando las palabras de búsqueda."
-          icono={<Utensils className="w-8 h-8" />}
-          accion={
-            <button
-              onClick={() => {
-                setBusqueda("");
-                setCategoriaSeleccionada(null);
-                setPagina(1);
-              }}
-              className="px-4 py-2 rounded-xl bg-amber-500 text-white text-xs font-bold hover:bg-amber-600 transition-colors shadow-sm"
-            >
-              Limpiar filtros
-            </button>
-          }
-        />
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {productos.map((producto) => {
-            const itemEnCarrito = itemsCarrito.find(
-              (i) => i.producto_id === producto.id
-            );
-            const cantidadEnCarrito = itemEnCarrito ? itemEnCarrito.cantidad : 0;
-            const sinStock = producto.stock <= 0;
-            const limiteAlcanzado = cantidadEnCarrito >= producto.stock;
-
-            return (
-              <div
-                key={producto.id}
-                className="group bg-white rounded-3xl border border-stone-200/90 overflow-hidden shadow-sm hover:shadow-xl hover:border-amber-200 transition-all duration-300 flex flex-col"
+          </li>
+          {categorias.map((cat) => (
+            <li key={cat.id}>
+              <button
+                onClick={() => handleCambiarCategoria(cat.id)}
+                className={`w-full text-left px-3 py-2 rounded-lg font-medium transition-all cursor-pointer ${
+                  categoriaSeleccionada === cat.id
+                    ? "bg-[#1e3a8a] text-white font-semibold shadow-sm"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-[#1e3a8a]"
+                }`}
               >
-                {/* Imagen del Producto */}
-                <div className="relative h-48 w-full overflow-hidden bg-stone-100">
-                  <img
-                    src={
-                      producto.imagen_url ||
-                      "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=600&auto=format&fit=crop"
-                    }
-                    alt={producto.nombre}
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src =
-                        "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=600&auto=format&fit=crop";
-                    }}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
+                <span className="truncate block">{cat.nombre}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </aside>
 
-                  {/* Badge de Stock / Estado */}
-                  <div className="absolute top-3 right-3 flex flex-col gap-1 items-end">
-                    {sinStock ? (
-                      <span className="px-2.5 py-1 text-[11px] font-bold rounded-full bg-red-500/90 text-white backdrop-blur-xs shadow-sm">
-                        Agotado
-                      </span>
-                    ) : producto.stock <= 5 ? (
-                      <span className="px-2.5 py-1 text-[11px] font-bold rounded-full bg-amber-500/90 text-white backdrop-blur-xs shadow-sm">
-                        ¡Últimos {producto.stock}!
-                      </span>
-                    ) : null}
+      {/* CONTENIDO PRINCIPAL */}
+      <main className="flex-1 min-h-0 flex flex-col overflow-hidden">
+        {isLoading ? (
+          <div className="grid grid-cols-4 gap-3 flex-1 min-h-0" style={{ gridTemplateRows: "1fr 1fr" }}>
+            {Array.from({ length: ITEMS_POR_PAGINA }).map((_, idx) => (
+              <CardSkeleton key={idx} />
+            ))}
+          </div>
+        ) : isError ? (
+          <div className="flex-1 flex items-center justify-center">
+            <EstadoVacio
+              titulo="Error al cargar productos"
+              descripcion="No pudimos comunicarnos con el servidor. Por favor, reintentalo."
+            />
+          </div>
+        ) : productos.length === 0 ? (
+          <div className="flex-1 flex items-center justify-center">
+            <EstadoVacio
+              titulo="No se encontraron productos"
+              descripcion="Probá seleccionando otra categoría o cambiando las palabras de búsqueda."
+              icono={<Utensils className="w-8 h-8 text-[#1e3a8a]" />}
+              accion={
+                <button
+                  onClick={() => {
+                    setBusqueda("");
+                    setCategoriaSeleccionada(null);
+                    setPagina(1);
+                  }}
+                  className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#1e3a8a] via-[#3b82f6] to-[#1e3a8a] text-white text-xs font-bold hover:opacity-90 shadow-sm cursor-pointer"
+                >
+                  Limpiar filtros
+                </button>
+              }
+            />
+          </div>
+        ) : (
+          <div
+            className="grid grid-cols-4 gap-3 flex-1 min-h-0 overflow-hidden"
+            style={{ gridTemplateRows: "1fr 1fr" }}
+          >
+            {productos.map((producto) => {
+              const itemEnCarrito = itemsCarrito.find(
+                (i) => i.producto_id === producto.id
+              );
+              const cantidadEnCarrito = itemEnCarrito ? itemEnCarrito.cantidad : 0;
+              const sinStock = producto.stock <= 0;
+              const limiteAlcanzado = cantidadEnCarrito >= producto.stock;
 
-                    {cantidadEnCarrito > 0 && (
-                      <span className="px-2.5 py-1 text-[11px] font-bold rounded-full bg-emerald-500 text-white shadow-sm flex items-center gap-1">
-                        <Check className="w-3 h-3" />
-                        <span>{cantidadEnCarrito} en carrito</span>
-                      </span>
-                    )}
+              return (
+                <div
+                  key={producto.id}
+                  className="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all flex flex-col overflow-hidden"
+                >
+                  {/* Imagen — ocupa la mayoría del espacio */}
+                  <div className="relative flex-1 min-h-0 bg-slate-50 flex items-center justify-center overflow-hidden">
+                    <img
+                      src={producto.imagen_url || "/assets/hamburguesa.jpg"}
+                      alt={producto.nombre}
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src = "/assets/hamburguesa.jpg";
+                      }}
+                      className="w-full h-full object-contain transition-transform duration-300 hover:scale-105"
+                      style={{ maxHeight: "100%" }}
+                    />
+
+                    {/* Badge stock / carrito */}
+                    <div className="absolute top-1.5 right-1.5 flex flex-col gap-1 items-end">
+                      {sinStock && (
+                        <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-red-500 text-white shadow-xs">
+                          Agotado
+                        </span>
+                      )}
+                      {!sinStock && producto.stock <= 5 && (
+                        <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-500 text-white shadow-xs">
+                          ¡Últimos {producto.stock}!
+                        </span>
+                      )}
+                      {cantidadEnCarrito > 0 && (
+                        <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-600 text-white shadow-xs flex items-center gap-0.5">
+                          <Check className="w-2.5 h-2.5" />
+                          {cantidadEnCarrito}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                </div>
 
-                {/* Contenido */}
-                <div className="p-5 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h3 className="font-bold text-stone-900 text-base group-hover:text-amber-600 transition-colors line-clamp-1">
+                  {/* Datos compactos en la parte baja */}
+                  <div className="px-2.5 pt-1.5 pb-2 shrink-0 border-t border-slate-100">
+                    <h3 className="text-xs font-bold text-slate-800 truncate leading-tight" title={producto.nombre}>
                       {producto.nombre}
                     </h3>
-                    <p className="text-xs text-stone-500 mt-1 line-clamp-2 leading-relaxed">
-                      {producto.descripcion || "Plato fresco y delicioso elaborado al momento."}
+                    <p className="text-[10px] text-slate-500 truncate" title={producto.descripcion || ""}>
+                      {producto.descripcion || "Elaborado con ingredientes frescos"}
                     </p>
-                  </div>
 
-                  <div className="pt-4 mt-3 border-t border-stone-100 flex items-center justify-between">
-                    <div>
-                      <span className="text-[10px] uppercase font-bold text-stone-600 block">
-                        Precio
-                      </span>
-                      <span className="text-lg font-black text-stone-900">
+                    <div className="flex items-center justify-between mt-1.5 gap-1.5">
+                      <span className="text-sm font-extrabold text-[#1e3a8a] leading-none">
                         ${producto.precio_base.toLocaleString("es-AR")}
                       </span>
-                    </div>
 
-                    <button
-                      onClick={() => handleAgregarAlCarrito(producto)}
-                      disabled={sinStock || limiteAlcanzado}
-                      className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm ${
-                        sinStock || limiteAlcanzado
-                          ? "bg-stone-100 text-stone-400 border border-stone-200 cursor-not-allowed"
-                          : "bg-amber-500 hover:bg-amber-600 active:scale-95 text-white shadow-amber-500/20 cursor-pointer"
-                      }`}
-                      title={
-                        sinStock
-                          ? "Sin stock"
-                          : limiteAlcanzado
-                          ? "Límite disponible ya en carrito"
-                          : "Agregar al carrito"
-                      }
-                    >
-                      <ShoppingBag className="w-3.5 h-3.5" />
-                      <span>
-                        {sinStock
-                          ? "Agotado"
-                          : limiteAlcanzado
-                          ? "Alcanzado"
-                          : "Agregar"}
-                      </span>
-                    </button>
+                      {sinStock ? (
+                        <button disabled className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-red-800 via-red-500 to-red-800 text-white font-bold text-[10px] cursor-not-allowed opacity-90 shrink-0">
+                          Agotado
+                        </button>
+                      ) : limiteAlcanzado ? (
+                        <button disabled className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-200 text-slate-500 font-bold text-[10px] cursor-not-allowed shrink-0">
+                          Máx. {cantidadEnCarrito}
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => handleAgregarAlCarrito(producto)}
+                          className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-[#1e3a8a] via-[#3b82f6] to-[#1e3a8a] hover:from-[#1e40af] hover:to-[#1e40af] text-white font-bold text-[10px] shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer shrink-0"
+                        >
+                          <ShoppingBag className="w-2.5 h-2.5" />
+                          <span>Agregar</span>
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
+              );
+            })}
+          </div>
+        )}
 
-      {/* Paginación */}
-      <Paginacion
-        paginaActual={pagina}
-        totalPaginas={totalPaginas}
-        onCambiarPagina={(nuevaPagina) => {
-          setPagina(nuevaPagina);
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }}
-      />
+        {/* Paginación Metalizada */}
+        <div className="flex items-center justify-center gap-3 py-1.5 shrink-0">
+          <button
+            onClick={() => setPagina((p) => Math.max(p - 1, 1))}
+            disabled={pagina <= 1}
+            className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-gradient-to-r from-[#1e3a8a] via-[#3b82f6] to-[#1e3a8a] hover:opacity-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-all shadow-xs"
+          >
+            <ChevronLeft className="w-3.5 h-3.5" />
+            <span>Anterior</span>
+          </button>
+
+          <span className="text-xs font-semibold text-slate-600">
+            Página {pagina} de {totalPaginas || 1}
+          </span>
+
+          <button
+            onClick={() => setPagina((p) => Math.min(p + 1, totalPaginas))}
+            disabled={pagina >= totalPaginas}
+            className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-gradient-to-r from-[#1e3a8a] via-[#3b82f6] to-[#1e3a8a] hover:opacity-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-all shadow-xs"
+          >
+            <span>Siguiente</span>
+            <ChevronRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </main>
     </div>
   );
 };

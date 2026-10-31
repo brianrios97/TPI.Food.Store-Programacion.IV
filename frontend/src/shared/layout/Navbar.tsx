@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ShoppingBag, Utensils, User, LogOut, ShieldCheck, ClipboardList } from "lucide-react";
+import { ShoppingBag, User, LogOut } from "lucide-react";
 import { useAuthStore } from "../../store/authStore";
 import { useCartStore } from "../../store/cartStore";
 
@@ -16,91 +16,82 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-stone-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+    <header className="shrink-0 bg-gradient-to-r from-[#1e3a8a] via-[#3b82f6] to-[#1e3a8a] text-white shadow-md z-40">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-14">
           {/* Logo / Marca */}
-          <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform">
-              <Utensils className="w-5 h-5" />
-            </div>
-            <div>
-              <span className="text-xl font-extrabold tracking-tight text-stone-900">Food<span className="text-amber-600">Store</span></span>
-              <span className="block text-[10px] uppercase font-bold tracking-widest text-stone-600 -mt-1">Delivery</span>
-            </div>
-          </Link>
+          <div className="flex items-center gap-6">
+            <Link to="/" className="flex items-center gap-2 group transition-transform hover:scale-105">
+              <span className="text-2xl">🍔</span>
+              <span className="text-xl font-bold tracking-tight text-white">Food Store</span>
+            </Link>
 
-          {/* Navegación Derecha */}
-          <div className="flex items-center gap-3 sm:gap-4">
-            {/* Botón Carrito / Mini Carrito deslizable */}
+            <nav className="hidden md:flex items-center gap-4 text-sm font-medium">
+              <Link to="/" className="text-white hover:text-blue-100 transition-colors">
+                Inicio
+              </Link>
+              {usuario && usuario.role === "user" && (
+                <Link to="/mis-pedidos" className="text-white/80 hover:text-white transition-colors">
+                  Mis Pedidos
+                </Link>
+              )}
+              {usuario && usuario.role === "admin" && (
+                <Link to="/admin/resumen" className="text-white/80 hover:text-white transition-colors">
+                  Panel Admin
+                </Link>
+              )}
+            </nav>
+          </div>
+
+          {/* Acciones Derecha */}
+          <div className="flex items-center gap-3">
+            {/* Botón Carrito estilo TP3 */}
             <button
               onClick={toggleDrawer}
-              className="relative p-2.5 text-stone-700 hover:text-amber-600 rounded-lg hover:bg-stone-100 transition-colors"
-              title="Abrir Carrito"
+              className="bg-white text-[#1e3a8a] hover:bg-blue-50 px-3.5 py-1.5 rounded-lg font-semibold text-sm flex items-center gap-2 shadow-sm transition-transform hover:scale-105 cursor-pointer"
+              title="Ver Carrito"
             >
-              <ShoppingBag className="w-5 h-5" />
+              <ShoppingBag className="w-4 h-4 text-[#1e3a8a]" />
+              <span>Carrito</span>
               {cantidadCarrito > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-amber-500 text-white text-xs font-bold rounded-full flex items-center justify-center shadow-sm animate-pulse">
+                <span className="bg-[#1e3a8a] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
                   {cantidadCarrito}
                 </span>
               )}
             </button>
 
             {usuario ? (
-              <div className="flex items-center gap-2 sm:gap-3">
-                {/* Si es Admin: acceso al panel */}
-                {usuario.role === "admin" && (
-                  <Link
-                    to="/admin/resumen"
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 transition-colors"
-                  >
-                    <ShieldCheck className="w-4 h-4 text-amber-600" />
-                    <span>Panel Admin</span>
-                  </Link>
-                )}
-
-                {/* Si es Cliente: acceso a Mis Pedidos */}
-                {usuario.role === "user" && (
-                  <Link
-                    to="/mis-pedidos"
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-stone-100 text-stone-700 hover:bg-stone-200 transition-colors"
-                  >
-                    <ClipboardList className="w-4 h-4 text-stone-500" />
-                    <span className="hidden sm:inline">Mis Pedidos</span>
-                  </Link>
-                )}
-
-                {/* Badge de Usuario y Rol */}
-                <div className="flex items-center gap-2 pl-2 border-l border-stone-200">
-                  <div className="w-8 h-8 rounded-full bg-stone-100 border border-stone-200 flex items-center justify-center text-stone-600">
+              <div className="flex items-center gap-3">
+                <div className="hidden sm:flex items-center gap-2 text-xs">
+                  <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-white font-bold">
                     <User className="w-4 h-4" />
                   </div>
-                  <div className="hidden md:block text-left">
-                    <div className="text-xs font-bold text-stone-800 leading-none">{usuario.full_name}</div>
-                    <div className="text-[10px] text-stone-600 font-medium capitalize">{usuario.role}</div>
+                  <div className="text-left">
+                    <div className="font-semibold text-white leading-tight">{usuario.full_name}</div>
+                    <div className="text-[10px] text-blue-100 uppercase tracking-wider">{usuario.role}</div>
                   </div>
                 </div>
 
-                {/* Botón Salir */}
                 <button
                   onClick={handleLogout}
-                  className="p-2 text-stone-500 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+                  className="bg-white/10 hover:bg-white/20 border border-blue-300/40 text-white px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer"
                   title="Cerrar Sesión"
                 >
-                  <LogOut className="w-4 h-4" />
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Cerrar sesión</span>
                 </button>
               </div>
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 text-sm">
                 <Link
                   to="/login"
-                  className="px-3.5 py-1.5 text-sm font-semibold text-stone-700 hover:text-stone-900 transition-colors"
+                  className="bg-white/10 hover:bg-white/20 border border-blue-300/40 text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-all"
                 >
                   Ingresar
                 </Link>
                 <Link
                   to="/register"
-                  className="px-3.5 py-1.5 text-sm font-semibold text-white bg-amber-500 hover:bg-amber-600 rounded-lg shadow-sm transition-colors"
+                  className="bg-white text-[#1e3a8a] hover:bg-blue-50 px-3 py-1.5 rounded-md text-xs font-bold shadow-sm transition-all"
                 >
                   Registrarse
                 </Link>

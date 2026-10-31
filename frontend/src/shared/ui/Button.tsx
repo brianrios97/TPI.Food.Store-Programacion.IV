@@ -24,11 +24,11 @@ export const Button: React.FC<ButtonProps> = ({
   }[size];
 
   const variantClasses = {
-    primary: "bg-amber-500 hover:bg-amber-600 text-white shadow-sm shadow-amber-500/20 focus:ring-amber-500",
-    secondary: "bg-stone-800 hover:bg-stone-900 text-white focus:ring-stone-800",
+    primary: "bg-gradient-to-r from-[#1e3a8a] via-[#3b82f6] to-[#1e3a8a] hover:from-[#1e40af] hover:to-[#1e40af] text-white shadow-sm shadow-blue-900/20 focus:ring-blue-600",
+    secondary: "bg-slate-800 hover:bg-slate-900 text-white focus:ring-slate-800",
     danger: "bg-rose-500 hover:bg-rose-600 text-white shadow-sm focus:ring-rose-500",
-    outline: "border border-stone-300 hover:border-stone-400 bg-white text-stone-700 hover:bg-stone-50 focus:ring-stone-400",
-    ghost: "text-stone-600 hover:text-stone-900 hover:bg-stone-100 focus:ring-stone-400"
+    outline: "border border-slate-300 hover:border-slate-400 bg-white text-slate-700 hover:bg-slate-50 focus:ring-slate-400",
+    ghost: "text-slate-600 hover:text-slate-900 hover:bg-slate-100 focus:ring-slate-400"
   }[variant];
 
   return (

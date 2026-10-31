@@ -3,8 +3,14 @@ import { PedidoCreate, PedidoRead, PedidosPaginados, ResumenPedidos, EstadoPedid
 
 export const pedidosApi = {
   obtenerMisPedidos: async (): Promise<PedidoRead[]> => {
-    const response = await axiosInstance.get<PedidoRead[]>("/pedidos");
-    return response.data;
+    const response = await axiosInstance.get<PedidosPaginados | PedidoRead[]>("/pedidos");
+    const data = response.data;
+    // El endpoint devuelve { total, items } (paginado) — extraemos el array
+    if (data && typeof data === "object" && "items" in data && Array.isArray((data as PedidosPaginados).items)) {
+      return (data as PedidosPaginados).items;
+    }
+    // Fallback por si alguna vez devuelve el array directo
+    return Array.isArray(data) ? data : [];
   },
 
   crearPedido: async (dto: PedidoCreate): Promise<PedidoRead> => {
@@ -24,7 +30,7 @@ export const pedidosApi = {
     params.append("limit", limit.toString());
     if (estado) params.append("estado", estado);
 
-    const response = await axiosInstance.get<PedidosPaginados>(`/pedidos/admin?${params.toString()}`);
+    const response = await axiosInstance.get<PedidosPaginados>(`/pedidos?${params.toString()}`);
     return response.data;
   },
 

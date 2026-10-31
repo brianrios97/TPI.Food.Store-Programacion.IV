@@ -39,10 +39,10 @@ export const AdminNav: React.FC<AdminNavProps> = ({ titulo, subtitulo, accion })
             key={p.ruta}
             to={p.ruta}
             className={({ isActive }) =>
-              `flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
+              `flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 ${
                 isActive
-                  ? "bg-amber-500 text-white shadow-sm shadow-amber-500/20"
-                  : "text-stone-600 hover:text-stone-900 hover:bg-stone-100"
+                  ? "bg-[#1e3a8a] text-white shadow-sm"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
               }`
             }
           >
