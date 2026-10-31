@@ -648,12 +648,12 @@ export const AdminProductosPage: React.FC = () => {
                   <span>URL de la Imagen</span>
                 </label>
                 <input
-                  type="url"
+                  type="text"
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder="https://images.unsplash.com/..."
-                  className="w-full px-3.5 py-2 rounded-xl border border-stone-300 text-xs font-medium focus:border-amber-500 focus:ring-2 focus:ring-amber-100 outline-none"
+                  placeholder="/assets/hamburguesa.jpg o https://..."
+                  className="w-full px-3.5 py-2 rounded-xl border border-stone-300 text-xs font-medium focus:border-[#1e3a8a] focus:ring-2 focus:ring-blue-100 outline-none"
                 />
               </div>
             )}
@@ -678,7 +678,7 @@ export const AdminProductosPage: React.FC = () => {
                     crearMutation.isPending ||
                     editarMutation.isPending
                   }
-                  className="px-4 py-2 bg-amber-500 hover:bg-amber-600 disabled:bg-stone-300 text-white text-xs font-bold rounded-xl shadow-sm transition-colors cursor-pointer"
+                  className="px-4 py-2 bg-gradient-to-r from-[#1e3a8a] via-[#3b82f6] to-[#1e3a8a] hover:opacity-90 disabled:bg-stone-300 text-white text-xs font-bold rounded-xl shadow-sm transition-all cursor-pointer"
                 >
                   {isSubmitting || crearMutation.isPending || editarMutation.isPending
                     ? "Guardando..."
