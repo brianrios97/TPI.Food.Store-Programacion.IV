@@ -47,3 +47,4 @@ export interface ResumenPedidos {
   pedidos_hoy: number;
   ingresos_entregados: number;
 }
+

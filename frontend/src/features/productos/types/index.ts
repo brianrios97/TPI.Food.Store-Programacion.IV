@@ -38,3 +38,4 @@ export interface ProductoStockUpdate {
   stock: number;
   activo?: boolean | null;
 }
+

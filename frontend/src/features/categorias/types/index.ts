@@ -14,3 +14,4 @@ export interface CategoriaUpdate {
   nombre?: string | null;
   descripcion?: string | null;
 }
+

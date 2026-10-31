@@ -45,3 +45,4 @@ export const toast = {
   info: (mensaje: string) => useToastStore.getState().agregarToast(mensaje, "info"),
   warning: (mensaje: string) => useToastStore.getState().agregarToast(mensaje, "warning")
 };
+
