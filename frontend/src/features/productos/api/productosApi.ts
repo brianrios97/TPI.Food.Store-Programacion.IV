@@ -1,5 +1,11 @@
 import { axiosInstance } from "../../../shared/api/axiosInstance";
-import { ProductosPaginados, ProductoPublic } from "../types";
+import {
+  ProductosPaginados,
+  ProductoPublic,
+  ProductoCreate,
+  ProductoUpdate,
+  ProductoStockUpdate
+} from "../types";
 
 export interface FiltrosProductos {
   skip?: number;
@@ -25,6 +31,24 @@ export const productosApi = {
   obtenerPorId: async (id: number): Promise<ProductoPublic> => {
     const response = await axiosInstance.get<ProductoPublic>(`/productos/${id}`);
     return response.data;
+  },
+
+  crear: async (data: ProductoCreate): Promise<ProductoPublic> => {
+    const response = await axiosInstance.post<ProductoPublic>("/productos", data);
+    return response.data;
+  },
+
+  actualizar: async (id: number, data: ProductoUpdate): Promise<ProductoPublic> => {
+    const response = await axiosInstance.put<ProductoPublic>(`/productos/${id}`, data);
+    return response.data;
+  },
+
+  actualizarStock: async (id: number, data: ProductoStockUpdate): Promise<ProductoPublic> => {
+    const response = await axiosInstance.patch<ProductoPublic>(`/productos/${id}/stock`, data);
+    return response.data;
+  },
+
+  eliminar: async (id: number): Promise<void> => {
+    await axiosInstance.delete(`/productos/${id}`);
   }
 };
-
