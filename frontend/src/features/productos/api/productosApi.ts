@@ -21,7 +21,10 @@ export const productosApi = {
     if (filtros.skip !== undefined) params.append("skip", filtros.skip.toString());
     if (filtros.limit !== undefined) params.append("limit", filtros.limit.toString());
     if (filtros.categoria_id) params.append("categoria_id", filtros.categoria_id.toString());
-    if (filtros.q && filtros.q.trim().length > 0) params.append("q", filtros.q.trim());
+    if (filtros.q && filtros.q.trim().length > 0) {
+      params.append("search", filtros.q.trim());
+      params.append("q", filtros.q.trim());
+    }
     if (filtros.solo_activos !== undefined) params.append("solo_activos", filtros.solo_activos.toString());
 
     const response = await axiosInstance.get<ProductosPaginados>(`/productos?${params.toString()}`);

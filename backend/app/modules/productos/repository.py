@@ -1,5 +1,5 @@
 from typing import Optional, List, Tuple
-from sqlmodel import Session, select, func
+from sqlmodel import Session, select, func, or_
 from app.core.base_repository import BaseRepository
 from app.modules.productos.models import Producto
 
@@ -32,7 +32,21 @@ class ProductoRepository(BaseRepository[Producto]):
         query = select(Producto).where(Producto.activo == True)
 
         if search:
-            query = query.where(func.lower(Producto.nombre).contains(search.lower()))
+            termino = search.lower().strip()
+            condiciones = [
+                func.lower(Producto.nombre).contains(termino),
+                func.lower(Producto.descripcion).contains(termino)
+            ]
+            # Soporte de sinónimos gastronómicos comunes
+            if "burger" in termino or "burguer" in termino:
+                condiciones.append(func.lower(Producto.nombre).contains("hamburguesa"))
+                condiciones.append(func.lower(Producto.descripcion).contains("hamburguesa"))
+            if "hamburguesa" in termino:
+                condiciones.append(func.lower(Producto.nombre).contains("burger"))
+            if "frita" in termino or "fritas" in termino or "bastón" in termino:
+                condiciones.append(func.lower(Producto.nombre).contains("papas"))
+
+            query = query.where(or_(*condiciones))
 
         if categoria_id is not None:
             query = query.where(Producto.categoria_id == categoria_id)

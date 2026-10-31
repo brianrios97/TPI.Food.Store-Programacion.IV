@@ -33,6 +33,7 @@ def list_productos(
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=20, ge=1, le=100),
     search: Optional[str] = Query(default=None),
+    q: Optional[str] = Query(default=None),
     categoria_id: Optional[int] = Query(default=None),
     disponible: Optional[bool] = Query(default=None),
     service: ProductoService = Depends(get_producto_service)
@@ -41,10 +42,11 @@ def list_productos(
     Retorna el catálogo paginado de productos activos.
     Permite búsqueda case-insensitive por nombre y filtrado por categoría y disponibilidad.
     """
+    filtro_busqueda = search or q
     return service.search(
         skip=skip,
         limit=limit,
-        search=search,
+        search=filtro_busqueda,
         categoria_id=categoria_id,
         disponible=disponible
     )
