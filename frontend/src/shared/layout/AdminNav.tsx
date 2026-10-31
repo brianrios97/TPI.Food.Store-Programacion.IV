@@ -54,3 +54,4 @@ export const AdminNav: React.FC<AdminNavProps> = ({ titulo, subtitulo, accion })
     </div>
   );
 };
+
