@@ -32,8 +32,8 @@ class ProductoUpdate(SQLModel):
 
 class ProductoStockUpdate(SQLModel):
     """DTO específico para actualizar stock y disponibilidad mediante PATCH."""
-    stock: int = Field(ge=0)
-    disponible: bool
+    stock: Optional[int] = Field(default=None, ge=0)
+    disponible: Optional[bool] = Field(default=None)
 
 
 class ProductoRead(ProductoBase):

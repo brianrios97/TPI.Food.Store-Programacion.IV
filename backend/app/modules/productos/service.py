@@ -124,8 +124,10 @@ class ProductoService:
             if not producto or not producto.activo:
                 raise ProductoNoEncontrado(f"Producto con ID {producto_id} no encontrado")
 
-            producto.stock = data.stock
-            producto.disponible = data.disponible
+            if data.stock is not None:
+                producto.stock = data.stock
+            if data.disponible is not None:
+                producto.disponible = data.disponible
             uow.productos.add(producto)
             return ProductoRead.model_validate(producto)
 

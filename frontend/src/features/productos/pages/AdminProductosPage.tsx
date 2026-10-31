@@ -95,16 +95,16 @@ export const AdminProductosPage: React.FC = () => {
     mutationFn: ({
       id,
       stock,
-      activo
+      disponible
     }: {
       id: number;
-      stock: number;
-      activo?: boolean;
-    }) => productosApi.actualizarStock(id, { stock, activo }),
+      stock?: number;
+      disponible?: boolean;
+    }) => productosApi.actualizarStock(id, { stock, disponible }),
     onSuccess: (prod) => {
       queryClient.invalidateQueries({ queryKey: ["admin-productos"] });
       queryClient.invalidateQueries({ queryKey: ["productos"] });
-      toast.success(`Stock de "${prod.nombre}" actualizado a ${prod.stock}`);
+      toast.success(`Producto "${prod.nombre}" actualizado`);
     },
     onError: (err) => {
       const msg = handleApiError(err);
@@ -310,7 +310,7 @@ export const AdminProductosPage: React.FC = () => {
         }
       },
       {
-        accessorKey: "activo",
+        accessorKey: "disponible",
         header: "Disponibilidad",
         cell: ({ row }) => {
           const prod = row.original;
@@ -319,18 +319,17 @@ export const AdminProductosPage: React.FC = () => {
               onClick={() =>
                 stockMutation.mutate({
                   id: prod.id,
-                  stock: prod.stock,
-                  activo: !prod.activo
+                  disponible: !prod.disponible
                 })
               }
               className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-bold rounded-full border transition-colors cursor-pointer ${
-                prod.activo
+                prod.disponible
                   ? "bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100"
                   : "bg-stone-100 border-stone-200 text-stone-600 hover:bg-stone-200"
               }`}
               title="Clic para cambiar disponibilidad"
             >
-              {prod.activo ? (
+              {prod.disponible ? (
                 <>
                   <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
                   <span>Disponible</span>

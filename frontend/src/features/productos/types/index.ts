@@ -6,6 +6,7 @@ export interface ProductoPublic {
   stock: number;
   categoria_id: number;
   imagen_url?: string | null;
+  disponible: boolean;
   activo: boolean;
 }
 
@@ -35,7 +36,7 @@ export interface ProductoUpdate {
 }
 
 export interface ProductoStockUpdate {
-  stock: number;
-  activo?: boolean | null;
+  stock?: number;
+  disponible?: boolean;
 }
 
