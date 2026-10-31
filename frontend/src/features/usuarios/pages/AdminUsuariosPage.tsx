@@ -7,3 +7,4 @@ export const AdminUsuariosPage: React.FC = () => {
     </div>
   );
 };
+

@@ -7,6 +7,7 @@ import { useCartStore } from "../../store/cartStore";
 export const Navbar: React.FC = () => {
   const { usuario, logout } = useAuthStore();
   const cantidadCarrito = useCartStore((state) => state.cantidadTotal());
+  const toggleDrawer = useCartStore((state) => state.toggleDrawer);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -31,11 +32,11 @@ export const Navbar: React.FC = () => {
 
           {/* Navegación Derecha */}
           <div className="flex items-center gap-3 sm:gap-4">
-            {/* Botón Carrito */}
-            <Link
-              to="/carrito"
+            {/* Botón Carrito / Mini Carrito deslizable */}
+            <button
+              onClick={toggleDrawer}
               className="relative p-2.5 text-stone-700 hover:text-amber-600 rounded-lg hover:bg-stone-100 transition-colors"
-              title="Ver Carrito de Compras"
+              title="Abrir Carrito"
             >
               <ShoppingBag className="w-5 h-5" />
               {cantidadCarrito > 0 && (
@@ -43,7 +44,7 @@ export const Navbar: React.FC = () => {
                   {cantidadCarrito}
                 </span>
               )}
-            </Link>
+            </button>
 
             {usuario ? (
               <div className="flex items-center gap-2 sm:gap-3">
@@ -111,3 +112,4 @@ export const Navbar: React.FC = () => {
     </header>
   );
 };
+

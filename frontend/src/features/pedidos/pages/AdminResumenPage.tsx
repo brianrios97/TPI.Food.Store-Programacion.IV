@@ -7,3 +7,4 @@ export const AdminResumenPage: React.FC = () => {
     </div>
   );
 };
+

@@ -52,3 +52,4 @@ export function handleApiError(error: unknown): string {
 
   return "Ha ocurrido un error inesperado.";
 }
+

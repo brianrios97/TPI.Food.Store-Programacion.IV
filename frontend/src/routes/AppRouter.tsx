@@ -55,3 +55,4 @@ export const AppRouter: React.FC = () => {
     </BrowserRouter>
   );
 };
+

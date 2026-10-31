@@ -7,3 +7,4 @@ export const AdminProductosPage: React.FC = () => {
     </div>
   );
 };
+

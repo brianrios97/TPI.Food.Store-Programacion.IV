@@ -27,3 +27,4 @@ export const EstadoVacio: React.FC<EstadoVacioProps> = ({
     </div>
   );
 };
+

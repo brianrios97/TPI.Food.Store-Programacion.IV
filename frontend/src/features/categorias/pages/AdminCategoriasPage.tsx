@@ -7,3 +7,4 @@ export const AdminCategoriasPage: React.FC = () => {
     </div>
   );
 };
+

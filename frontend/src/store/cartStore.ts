@@ -12,6 +12,10 @@ export interface CartItem {
 
 interface CartState {
   items: CartItem[];
+  isDrawerOpen: boolean;
+  abrirDrawer: () => void;
+  cerrarDrawer: () => void;
+  toggleDrawer: () => void;
   agregar: (producto: {
     id: number;
     nombre: string;
@@ -30,6 +34,11 @@ export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
+      isDrawerOpen: false,
+
+      abrirDrawer: () => set({ isDrawerOpen: true }),
+      cerrarDrawer: () => set({ isDrawerOpen: false }),
+      toggleDrawer: () => set((state) => ({ isDrawerOpen: !state.isDrawerOpen })),
 
       agregar: (producto, cantidad = 1) => {
         const { items } = get();
@@ -104,7 +113,9 @@ export const useCartStore = create<CartState>()(
       }
     }),
     {
-      name: "foodstore-cart"
+      name: "foodstore-cart",
+      partialize: (state) => ({ items: state.items })
     }
   )
 );
+

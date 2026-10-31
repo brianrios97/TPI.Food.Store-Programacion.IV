@@ -29,3 +29,4 @@ export const EstadoError: React.FC<EstadoErrorProps> = ({
     </div>
   );
 };
+
