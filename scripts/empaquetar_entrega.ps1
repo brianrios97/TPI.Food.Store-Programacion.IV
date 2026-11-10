@@ -1,4 +1,4 @@
-# Script de empaquetado para la entrega final de Programación IV
+﻿# Script de empaquetado para la entrega final de Programación IV
 # Excluye node_modules, .venv, bases de datos locales, archivos .env con secretos y carpetas temporales.
 
 $zipName = "TPI-Food_Store-Brian_Emanuel_Rios.zip"
@@ -12,7 +12,7 @@ if (Test-Path $outputPath) {
 }
 
 $excludeDirNames = @(".git", ".venv", "venv", "node_modules", "dist", "dist-ssr", "__pycache__", ".pytest_cache")
-$excludeExts = @(".db", ".sqlite", ".sqlite3", ".tsbuildinfo")
+$excludeExts = @(".db", ".sqlite", ".sqlite3", ".tsbuildinfo", ".pdf", ".docx")
 
 function Get-EligibleFiles($dir) {
     $results = @()
